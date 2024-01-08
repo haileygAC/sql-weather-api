@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
-    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="/ui/index.css" />
 
 
 
@@ -63,8 +63,8 @@
 
 
             <div class="hidden-maincontent overview grid-item">
-
-                <div class="main" id="today">
+    <main>
+                <div class="main today" id="today">
 
                     <div class="content primary" id="todays-results">
                         <p class="date"></p>
@@ -77,12 +77,11 @@
 
                     </div>
 
-                    <div class="content main primary" id="today_message">
+                    <div class="content  primary" id="today_message">
                         <p class="todaySummary"></p>
                     </div>
                 </div>
-
-
+    </main>
                 <div class="main" id="future">
 
                     <div class="content  secondary 1" id="one">
@@ -101,14 +100,6 @@
                         <p class="chance_of_rain"></p>
                     </div>
 
-                    <div class="content  secondary 3" id="three">
-                        <p class="date"></p>
-                        <p class="avetemp"></p>
-                        <p class="maxtemp"></p>
-                        <p class="mintemp"></p>
-                        <p class="chance_of_rain"></p>
-                    </div>
-
                 </div>
 
                 <div class="main">
@@ -117,12 +108,17 @@
                         <p class="highestTemp"></p>
                     </div>
 
+                    <div class="content  city_list footer">
+                       
+                    </div>
                 </div>
             </div>
     </div>
 </div>
 
-            <script src="script.js"></script>
+            <script src="/ui/script.js" defer></script>
+        
+        
 
 
 

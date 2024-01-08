@@ -16,7 +16,6 @@ let today_message;
 let todaySummary;
 let searchInput;
 let dayCall;
-futureResults = [1, 2, 3];
 let celsiusButton = document.querySelector("button.c");
 let searchList = document.querySelector(".history-button")
 let hiddenConverter = document.querySelector(".hidden-converter");
@@ -24,8 +23,23 @@ let hiddenMaincontent = document.querySelector(".hidden-maincontent");
 let initialHead = document.querySelector(".initial-header");
 let initialBody = document.querySelector(".initial-body");
 let searchlist = document.querySelector('.searchlist');
+let city_history = document.querySelector('.city_list');
 
 // the search button and the fahrenheit button have an onClick added to them because both return the F degree results 
+const getAllCities =  async () => {
+    let cities = await fetch('http://localhost:3000/get-cities');
+    let citiesParsed = await cities.json();
+    return citiesParsed;
+  }
+ 
+ const displayAllCities = async() => {
+    let displayCities = await getAllCities();
+    city_history.innerHTML = displayCities.map(function(cities) {
+        return cities.city_name;
+    });
+    }
+    displayAllCities()
+
 
 function onChange() {
     let cityFromUser = document.getElementById("search-input").value;
@@ -34,13 +48,12 @@ function onChange() {
 
     cityFromUser.trim();
 
-
     // if there are spaces, replace the space with a '-'
 
     if (cityFromUser.includes(" ")) {
         cityFromUser = cityFromUser.replace(/ /g, "-");
     }
-    cityLink = `http://api.weatherapi.com/v1/forecast.json?key=8b78ddff94f24e8087b182603232609&q=${cityFromUser}&days=${4}&aqi=no&alerts=no`;
+    cityLink = `http://api.weatherapi.com/v1/forecast.json?key=8b78ddff94f24e8087b182603232609&q=${cityFromUser}&days=${3}&aqi=no&alerts=no`;
     // push new searches to the front of the searched array 
 
     searched.unshift(cityFromUser);
@@ -55,17 +68,14 @@ function onChange() {
 
 
 
-
     console.log(link, cityFromUser, cityLink)
     // every time an input is submitted, create a new variable and store it in the searchHistory array 
-
-
 
     // have the string join the values with a space instead of a comma
 
     searchlist.append(link);
 
-    cityLink = `http://api.weatherapi.com/v1/forecast.json?key=8b78ddff94f24e8087b182603232609&q=${cityFromUser}&days=${4}&aqi=no&alerts=no`;
+    cityLink = `http://api.weatherapi.com/v1/forecast.json?key=8b78ddff94f24e8087b182603232609&q=${cityFromUser}&days=${3}&aqi=no&alerts=no`;
 
 
     // remove and add the desired class/id's to specific html properties for smooth css editing 
@@ -82,13 +92,11 @@ function onChange() {
     addRemove();
 
 
-    cityLink = `http://api.weatherapi.com/v1/forecast.json?key=8b78ddff94f24e8087b182603232609&q=${cityFromUser}&days=${4}&aqi=no&alerts=no`;
+    cityLink = `http://api.weatherapi.com/v1/forecast.json?key=8b78ddff94f24e8087b182603232609&q=${cityFromUser}&days=${3}&aqi=no&alerts=no`;
 
-
+ 
 
     console.log(cityLink);
-
-
 
     fetch(cityLink)
 
@@ -102,8 +110,13 @@ function onChange() {
 
         .then((data) => {
 
+          
+            
             // take the date 0000-00-00 and return that dates day of the week as long as the day falls within the length of the array (between 0-6)
 
+            dayCall = data.forecast.forecastday;
+
+            // Return day of the week
             function getDayOfWeek(date) {
                 let daysOfWeek = [
                     "Sunday",
@@ -128,11 +141,6 @@ function onChange() {
             }
 
             getDayOfWeek();
-
-            //api object call shortened into a simpler variable 
-
-
-            dayCall = data.forecast.forecastday;
 
 
 
@@ -171,7 +179,7 @@ function onChange() {
 
             //future weather results storied in an array that is looped through matching the html property based on its id and returning the requested information for the next three days
 
-            for (let i = 1; i < 4; i++) {
+            for (let i = 1; i < dayCall.length; i++) {
                 dates = ["zero", "one", "two", "three"];
                 (document.querySelector(`#${dates[i]} .date`).innerHTML =
                     `<i class="fa-solid fa-calendar-day"></i> ${getDayOfWeek(dayCall[i].date)}`),
@@ -194,7 +202,7 @@ function onChange() {
             //storing the highest temp of each day into an array and the corresponding date into another array
 
 
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 3; i++) {
                 maxlist[i] = dayCall[i].day.maxtemp_f;
                 maxDate[i] = getDayOfWeek(dayCall[i].date);
             }
@@ -244,7 +252,7 @@ function onChange() {
 
             // additional weather details that can be used for extra interaction / details
 
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 3; i++) {
                 callLibrary =
                 {
                     date: dayCall[i].date,
@@ -267,6 +275,7 @@ function onChange() {
             alert('Failed to load weather data. Please try again later.');
             console.error('Error:', error);
         });
+
 
 
 }
@@ -305,7 +314,7 @@ celsiusButton.addEventListener("click", function celsius() {
 
             };
 
-            for (let i = 1; i < 4; i++) {
+            for (let i = 1; i < dayCall.length; i++) {
                 (document.querySelector(
                     `#${dates[i]} .avetemp`
                 ).innerHTML = `<i class="fa-solid fa-gauge"></i> Average  Temp: ${dayCall[i].day.avgtemp_c}°C`),
@@ -318,7 +327,7 @@ celsiusButton.addEventListener("click", function celsius() {
 
             }
 
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 3; i++) {
                 maxlist[i] = dayCall[i].day.maxtemp_c;
 
             }
@@ -359,7 +368,6 @@ celsiusButton.addEventListener("click", function celsius() {
 })
 
 console.log(searched);
-
 
 
 
